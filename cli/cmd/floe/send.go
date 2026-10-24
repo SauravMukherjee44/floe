@@ -44,6 +44,9 @@ func init() {
 	// The help line is the approved copy's (TL-34), byte for byte.
 	sendCmd.Flags().StringVar(&flagTo, "to", "",
 		"send through a request link made in Floe Desktop instead of creating a code")
+	if err := sendCmd.RegisterFlagCompletionFunc("to", cobra.NoFileCompletions); err != nil {
+		panic(err)
+	}
 }
 
 func runSend(cmd *cobra.Command, args []string) error {

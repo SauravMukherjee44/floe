@@ -50,13 +50,17 @@ After a successful transfer the receiver posts only the total byte count to
 Floe's signaling server to power the public global-transfer counter. No file
 names, contents, or identities are included. To opt out of this report, use
 --no-report or set FLOE_NO_STATS=1 in your environment.`,
-	Args: cobra.ExactArgs(1),
-	RunE: runReceive,
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: cobra.NoFileCompletions,
+	RunE:              runReceive,
 }
 
 func init() {
 	receiveCmd.Flags().StringVarP(&flagOutput, "output", "o", ".",
 		"directory to save received files")
+	if err := receiveCmd.MarkFlagDirname("output"); err != nil {
+		panic(err)
+	}
 	receiveCmd.Flags().BoolVarP(&flagAutoAccept, "yes", "y", false,
 		"auto-accept incoming files without confirmation")
 	receiveCmd.Flags().BoolVar(&flagNoReport, "no-report", false,

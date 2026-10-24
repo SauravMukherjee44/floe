@@ -30,8 +30,9 @@ var (
 func shownVersion(tag string) string { return strings.TrimPrefix(tag, "v") }
 
 var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print the floe version",
+	Use:               "version",
+	Short:             "Print the floe version",
+	ValidArgsFunction: cobra.NoFileCompletions,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("floe %s\n", version)
 		fmt.Println("Docs: https://www.floe.one/docs")
@@ -57,7 +58,8 @@ If floe was installed via Homebrew, Scoop, or Winget, use your package manager
 to update instead (e.g. brew upgrade floe).
 
 Set FLOE_NO_UPDATE_CHECK=1 to suppress the update hint in 'floe version'.`,
-	RunE: runUpdate,
+	ValidArgsFunction: cobra.NoFileCompletions,
+	RunE:              runUpdate,
 }
 
 func init() {

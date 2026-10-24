@@ -123,6 +123,9 @@ func init() {
 	// Persistent flags are available on all subcommands
 	rootCmd.PersistentFlags().StringVar(&flagServer, "server", "https://api.floe.one",
 		"signaling server URL (use http://localhost:3001 for local testing) [env: FLOE_SERVER]")
+	if err := rootCmd.RegisterFlagCompletionFunc("server", cobra.NoFileCompletions); err != nil {
+		panic(err)
+	}
 	rootCmd.PersistentFlags().BoolVar(&flagNoRelay, "no-relay", false,
 		"disable TURN relay (direct connections only)")
 	rootCmd.PersistentFlags().BoolVar(&flagRelayOnly, "relay-only", false,
@@ -132,8 +135,14 @@ func init() {
 	rootCmd.MarkFlagsMutuallyExclusive("relay-only", "no-relay")
 	rootCmd.PersistentFlags().StringVar(&flagWebURL, "web", "",
 		"web app URL shown in the browser link (auto-detected if not set) [env: FLOE_WEB]")
+	if err := rootCmd.RegisterFlagCompletionFunc("web", cobra.NoFileCompletions); err != nil {
+		panic(err)
+	}
 	rootCmd.PersistentFlags().StringSliceVar(&flagIface, "iface", nil,
 		"restrict WebRTC to network interfaces matching these names (repeatable, e.g. --iface Ethernet); use when a VPN/VM adapter slows connection setup")
+	if err := rootCmd.RegisterFlagCompletionFunc("iface", completeIface); err != nil {
+		panic(err)
+	}
 
 	rootCmd.AddCommand(sendCmd)
 	rootCmd.AddCommand(receiveCmd)
