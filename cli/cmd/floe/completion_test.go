@@ -11,6 +11,14 @@ import (
 // and captures both direct printing and Cobra's output writers.
 func runCompletionCLI(t *testing.T, args ...string) (string, string) {
 	t.Helper()
+	// Completing a repeated --iface parses the earlier occurrence. The shared
+	// harness excludes this slice flag, so restore it before any transfer test.
+	ifaceFlag := rootCmd.PersistentFlags().Lookup("iface")
+	prevIfaces, prevChanged := append([]string(nil), flagIface...), ifaceFlag.Changed
+	t.Cleanup(func() {
+		flagIface = prevIfaces
+		ifaceFlag.Changed = prevChanged
+	})
 	stdout, stderr, err := runUpdateCLI(t, append([]string{"__complete"}, args...)...)
 	if err != nil {
 		t.Fatalf("completion failed: %v (stdout %q, stderr %q)", err, stdout, stderr)
